@@ -1,6 +1,8 @@
 package ru.vladikshk.library.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import ru.vladikshk.library.data.Book;
 
@@ -11,6 +13,8 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TagDetailsDTO {
 
     @NotEmpty(message = "Name shouldn't be empty")
