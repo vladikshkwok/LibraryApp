@@ -29,7 +29,6 @@ public class AuthorsService {
     public Author findOne(int id) {
         Optional<Author> author = authorsRepository.findById(id);
         author.ifPresent(a -> Hibernate.initialize(a.getBooks()));
-
         return author.orElseThrow(EntityNotFoundException::new);
     }
 

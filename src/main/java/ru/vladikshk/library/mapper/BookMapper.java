@@ -2,11 +2,12 @@ package ru.vladikshk.library.mapper;
 
 import org.mapstruct.Mapper;
 
+import org.springframework.stereotype.Component;
 import ru.vladikshk.library.data.Book;
 import ru.vladikshk.library.dto.BookDTO;
 import ru.vladikshk.library.dto.BookDetailsDTO;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface BookMapper {
 
 
