@@ -8,7 +8,6 @@ import ru.vladikshk.library.data.Author;
 import ru.vladikshk.library.dto.AuthorDTO;
 import ru.vladikshk.library.dto.AuthorDetailsDTO;
 import ru.vladikshk.library.mapper.AuthorMapper;
-import ru.vladikshk.library.mapper.BookMapper;
 import ru.vladikshk.library.repository.AuthorsRepository;
 
 import javax.persistence.EntityNotFoundException;
@@ -21,13 +20,11 @@ public class AuthorsService {
 
     private final AuthorsRepository authorsRepository;
     private final AuthorMapper authorMapper;
-    private final BookMapper bookMapper;
 
     @Autowired
-    public AuthorsService(AuthorsRepository authorsRepository, AuthorMapper authorMapper, BookMapper bookMapper) {
+    public AuthorsService(AuthorsRepository authorsRepository, AuthorMapper authorMapper) {
         this.authorsRepository = authorsRepository;
         this.authorMapper = authorMapper;
-        this.bookMapper = bookMapper;
     }
 
     public List<AuthorDTO> findAll() {
