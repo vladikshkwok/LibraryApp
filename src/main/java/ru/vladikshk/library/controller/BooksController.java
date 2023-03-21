@@ -6,11 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import ru.vladikshk.library.dto.AuthorDTO;
-import ru.vladikshk.library.dto.AuthorDetailsDTO;
 import ru.vladikshk.library.dto.BookDTO;
 import ru.vladikshk.library.dto.BookDetailsDTO;
-import ru.vladikshk.library.mapper.AuthorMapper;
 import ru.vladikshk.library.mapper.BookMapper;
 import ru.vladikshk.library.service.BooksService;
 import ru.vladikshk.library.util.EntityErrorResponse;
@@ -19,50 +16,41 @@ import ru.vladikshk.library.util.EntityNotModifiedException;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/books")
 public class BooksController {
 
     private final BooksService booksService;
-    private final BookMapper bookMapper;
 
     @Autowired
-    public BooksController(BooksService booksService, BookMapper bookMapper) {
+    public BooksController(BooksService booksService) {
         this.booksService = booksService;
-        this.bookMapper = bookMapper;
     }
 
     @GetMapping()
     public List<BookDTO> getBooks() {
-        return booksService.findAll().stream()
-                .map(bookMapper::bookToBookDTO)
-                .collect(Collectors.toList());
+        return booksService.findAll();
     }
 
     @GetMapping("/{id}")
     public BookDetailsDTO getBook(@PathVariable("id") int id) {
-        return bookMapper.bookToBookDetailsDTO(booksService.findOne(id));
+        return booksService.findOne(id);
     }
 
     @PostMapping()
-    public ResponseEntity<HttpStatus> createBook(@RequestBody @Valid BookDTO bookDTO,
+    public ResponseEntity<BookDetailsDTO> createBook(@RequestBody @Valid BookDTO bookDTO,
                                                    BindingResult bindingResult) {
         checkErrors(bindingResult);
-
-        booksService.save(bookMapper.bookDTOToBook(bookDTO));
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(booksService.save(bookDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HttpStatus> updateBook(@PathVariable("id") int id,
-                                                   @RequestBody @Valid BookDTO bookDTO,
-                                                   BindingResult bindingResult) {
+    public ResponseEntity<BookDetailsDTO> updateBook(@PathVariable("id") int id,
+                                                     @RequestBody @Valid BookDTO bookDTO,
+                                                     BindingResult bindingResult) {
         checkErrors(bindingResult);
-
-        booksService.update(id, bookMapper.bookDTOToBook(bookDTO));
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(booksService.update(id, bookDTO));
     }
 
     @DeleteMapping("/{id}")

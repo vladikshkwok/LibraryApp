@@ -25,45 +25,36 @@ public class AuthorsController {
 
     private final AuthorsService authorsService;
     private final BooksService booksService;
-    private final AuthorMapper authorMapper;
 
     @Autowired
-    public AuthorsController(AuthorsService authorsService, BooksService booksService, AuthorMapper authorMapper) {
+    public AuthorsController(AuthorsService authorsService, BooksService booksService) {
         this.authorsService = authorsService;
         this.booksService = booksService;
-        this.authorMapper = authorMapper;
     }
 
     @GetMapping()
     public List<AuthorDTO> getAuthors() {
-        return authorsService.findAll().stream()
-                .map(authorMapper::authorToAuthorDTO)
-                .collect(Collectors.toList());
+        return authorsService.findAll();
     }
 
     @GetMapping("/{id}")
     public AuthorDetailsDTO getAuthor(@PathVariable("id") int id) {
-        AuthorDetailsDTO author = authorMapper.authorToAuthorDetailsDTO(authorsService.findOne(id));
-        return author;
+        return authorsService.findOne(id);
     }
 
     @PostMapping()
-    public ResponseEntity<HttpStatus> createAuthor(@RequestBody @Valid AuthorDTO authorDTO,
+    public ResponseEntity<AuthorDetailsDTO> createAuthor(@RequestBody @Valid AuthorDTO authorDTO,
                                                    BindingResult bindingResult) {
         checkErrors(bindingResult);
-
-        authorsService.save(authorMapper.authorDTOToAuthor(authorDTO));
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(authorsService.save(authorDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HttpStatus> updateAuthor(@PathVariable("id") int id,
+    public ResponseEntity<AuthorDetailsDTO> updateAuthor(@PathVariable("id") int id,
                                                    @RequestBody @Valid AuthorDTO authorDTO,
                                                    BindingResult bindingResult) {
         checkErrors(bindingResult);
-
-        authorsService.update(id, authorMapper.authorDTOToAuthor(authorDTO));
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(authorsService.update(id, authorDTO));
     }
 
     @DeleteMapping("/{id}")

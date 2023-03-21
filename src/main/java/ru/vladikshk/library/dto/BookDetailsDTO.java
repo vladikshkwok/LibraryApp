@@ -17,12 +17,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookDetailsDTO {
+    private int id;
     @NotEmpty(message = "Name shouldn't be empty")
     @Size(min = 3, max = 100, message = "Name should be between 3 and 100 characters")
     @NonNull
     private String name;
 
-    private Author author;
+    private AuthorDTO author;
 
-    private List<Tag> tags;
+    private List<TagDTO> tags;
 }

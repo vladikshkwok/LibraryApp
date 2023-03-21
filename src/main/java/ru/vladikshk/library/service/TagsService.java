@@ -5,43 +5,51 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vladikshk.library.data.Tag;
+import ru.vladikshk.library.dto.TagDTO;
+import ru.vladikshk.library.dto.TagDetailsDTO;
+import ru.vladikshk.library.mapper.TagMapper;
 import ru.vladikshk.library.repository.TagsRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 public class TagsService {
 
     private final TagsRepository tagsRepository;
+    private final TagMapper tagMapper;
 
     @Autowired
-    public TagsService(TagsRepository tagsRepository) {
+    public TagsService(TagsRepository tagsRepository, TagMapper tagMapper) {
         this.tagsRepository = tagsRepository;
+        this.tagMapper = tagMapper;
     }
 
-    public List<Tag> findAll() {
-        return tagsRepository.findAll();
+    public List<TagDTO> findAll() {
+        return tagsRepository.findAll().stream()
+                .map(tagMapper::tagToTagDTO)
+                .collect(Collectors.toList());
     }
 
-    public Tag findOne(int id) {
-        Optional<Tag> tag = tagsRepository.findById(id);
-        tag.ifPresent(a -> Hibernate.initialize(a.getBooks()));
-
-        return tag.orElseThrow(EntityNotFoundException::new);
+    public TagDetailsDTO findOne(int id) {
+        return tagsRepository.findById(id).map(t -> {
+            Hibernate.initialize(t.getBooks());
+            return tagMapper.tagToTagDetailsDTO(t);
+        }).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional
-    public void save(Tag tag) {
-        tagsRepository.save(tag);
+    public TagDetailsDTO save(TagDTO tag) {
+        return tagMapper.tagToTagDetailsDTO(tagsRepository.save(tagMapper.tagDTOToTag(tag)));
     }
 
     @Transactional
-    public void update(int id, Tag tag) {
+    public TagDetailsDTO update(int id, TagDTO updatedTag) {
+        Tag tag = tagMapper.tagDTOToTag(updatedTag);
         tag.setId(id);
-        tagsRepository.save(tag);
+        return tagMapper.tagToTagDetailsDTO(tagsRepository.save(tag));
     }
 
     @Transactional

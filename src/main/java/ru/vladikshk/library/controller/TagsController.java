@@ -6,13 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import ru.vladikshk.library.dto.BookDTO;
-import ru.vladikshk.library.dto.BookDetailsDTO;
 import ru.vladikshk.library.dto.TagDTO;
 import ru.vladikshk.library.dto.TagDetailsDTO;
-import ru.vladikshk.library.mapper.BookMapper;
 import ru.vladikshk.library.mapper.TagMapper;
-import ru.vladikshk.library.service.BooksService;
 import ru.vladikshk.library.service.TagsService;
 import ru.vladikshk.library.util.EntityErrorResponse;
 import ru.vladikshk.library.util.EntityNotModifiedException;
@@ -20,7 +16,6 @@ import ru.vladikshk.library.util.EntityNotModifiedException;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tags")
@@ -37,33 +32,27 @@ public class TagsController {
 
     @GetMapping()
     public List<TagDTO> getTags() {
-        return tagsService.findAll().stream()
-                .map(tagMapper::tagToTagDTO)
-                .collect(Collectors.toList());
+        return tagsService.findAll();
     }
 
     @GetMapping("/{id}")
     public TagDetailsDTO getTag(@PathVariable("id") int id) {
-        return tagMapper.tagToTagDetailsDTO(tagsService.findOne(id));
+        return tagsService.findOne(id);
     }
 
     @PostMapping()
-    public ResponseEntity<HttpStatus> createTag(@RequestBody @Valid TagDTO tagDTO,
+    public ResponseEntity<TagDetailsDTO> createTag(@RequestBody @Valid TagDTO tagDTO,
                                                    BindingResult bindingResult) {
         checkErrors(bindingResult);
-
-        tagsService.save(tagMapper.tagDTOToTag(tagDTO));
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(tagsService.save(tagDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HttpStatus> updateTag(@PathVariable("id") int id,
+    public ResponseEntity<TagDetailsDTO> updateTag(@PathVariable("id") int id,
                                                    @RequestBody @Valid TagDTO tagDTO,
                                                    BindingResult bindingResult) {
         checkErrors(bindingResult);
-
-        tagsService.update(id, tagMapper.tagDTOToTag(tagDTO));
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(tagsService.update(id, tagDTO));
     }
 
     @DeleteMapping("/{id}")
