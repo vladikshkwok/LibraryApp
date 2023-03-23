@@ -1,6 +1,5 @@
 package ru.vladikshk.library.service;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,11 +33,8 @@ public class AuthorsService {
     }
 
     public AuthorDetailsDTO findOne(int id) {
-        return authorsRepository.findById(id)
-                .map(a -> {
-                    Hibernate.initialize(a.getBooks());
-                    return authorMapper.authorToAuthorDetailsDTO(a);
-                })
+        return authorsRepository.findByIdWithBooks(id)
+                .map(authorMapper::authorToAuthorDetailsDTO)
                 .orElseThrow(EntityNotFoundException::new);
     }
 
@@ -50,8 +46,8 @@ public class AuthorsService {
     }
 
     @Transactional
-    public AuthorDetailsDTO update(int id, AuthorDTO updatedAuthor) {
-        Author author = authorMapper.authorDTOToAuthor(updatedAuthor);
+    public AuthorDetailsDTO update(int id, AuthorDetailsDTO updatedAuthor) {
+        Author author = authorMapper.authorDetailsDTOToAuthor(updatedAuthor);
         author.setId(id);
         return authorMapper.authorToAuthorDetailsDTO(authorsRepository.save(author));
     }

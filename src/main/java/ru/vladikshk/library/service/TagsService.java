@@ -34,10 +34,7 @@ public class TagsService {
     }
 
     public TagDetailsDTO findOne(int id) {
-        return tagsRepository.findById(id).map(t -> {
-            Hibernate.initialize(t.getBooks());
-            return tagMapper.tagToTagDetailsDTO(t);
-        }).orElseThrow(EntityNotFoundException::new);
+        return tagsRepository.findByIdWithBooks(id).map(tagMapper::tagToTagDetailsDTO).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional
@@ -46,8 +43,8 @@ public class TagsService {
     }
 
     @Transactional
-    public TagDetailsDTO update(int id, TagDTO updatedTag) {
-        Tag tag = tagMapper.tagDTOToTag(updatedTag);
+    public TagDetailsDTO update(int id, TagDetailsDTO updatedTag) {
+        Tag tag = tagMapper.tagDetailsDTOToTag(updatedTag);
         tag.setId(id);
         return tagMapper.tagToTagDetailsDTO(tagsRepository.save(tag));
     }

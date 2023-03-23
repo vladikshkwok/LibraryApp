@@ -17,6 +17,5 @@ public class AuthorDTO {
     private int id;
     @NotEmpty(message = "Name shouldn't be empty")
     @Size(min = 3, max = 100, message = "Name should be between 3 and 100 characters")
-    @NonNull
     String name;
 }

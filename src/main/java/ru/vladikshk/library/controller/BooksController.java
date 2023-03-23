@@ -47,10 +47,10 @@ public class BooksController {
 
     @PutMapping("/{id}")
     public ResponseEntity<BookDetailsDTO> updateBook(@PathVariable("id") int id,
-                                                     @RequestBody @Valid BookDTO bookDTO,
+                                                     @RequestBody @Valid BookDetailsDTO bookDetailsDTO,
                                                      BindingResult bindingResult) {
         checkErrors(bindingResult);
-        return ResponseEntity.ok(booksService.update(id, bookDTO));
+        return ResponseEntity.ok(booksService.update(id, bookDetailsDTO));
     }
 
     @DeleteMapping("/{id}")

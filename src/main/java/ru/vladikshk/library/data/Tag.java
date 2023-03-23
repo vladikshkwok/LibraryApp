@@ -14,7 +14,6 @@ import java.util.List;
 @Entity
 @Table(name = "tag")
 @NoArgsConstructor
-@RequiredArgsConstructor()
 public class Tag {
 
     @Id
@@ -25,7 +24,6 @@ public class Tag {
     @Column(name = "name")
     @NotEmpty(message = "Name shouldn't be empty")
     @Size(min = 3, max = 100, message = "Name should be between 3 and 100 characters")
-    @NonNull
     String name;
 
     @ManyToMany(mappedBy = "tags")

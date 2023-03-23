@@ -49,10 +49,10 @@ public class TagsController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TagDetailsDTO> updateTag(@PathVariable("id") int id,
-                                                   @RequestBody @Valid TagDTO tagDTO,
+                                                   @RequestBody @Valid TagDetailsDTO tagDetailsDTO,
                                                    BindingResult bindingResult) {
         checkErrors(bindingResult);
-        return ResponseEntity.ok(tagsService.update(id, tagDTO));
+        return ResponseEntity.ok(tagsService.update(id, tagDetailsDTO));
     }
 
     @DeleteMapping("/{id}")

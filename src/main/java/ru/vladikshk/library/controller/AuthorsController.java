@@ -51,10 +51,10 @@ public class AuthorsController {
 
     @PutMapping("/{id}")
     public ResponseEntity<AuthorDetailsDTO> updateAuthor(@PathVariable("id") int id,
-                                                   @RequestBody @Valid AuthorDTO authorDTO,
+                                                   @RequestBody @Valid AuthorDetailsDTO authorDetailsDTO,
                                                    BindingResult bindingResult) {
         checkErrors(bindingResult);
-        return ResponseEntity.ok(authorsService.update(id, authorDTO));
+        return ResponseEntity.ok(authorsService.update(id, authorDetailsDTO));
     }
 
     @DeleteMapping("/{id}")

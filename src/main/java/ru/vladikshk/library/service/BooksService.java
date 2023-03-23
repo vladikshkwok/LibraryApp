@@ -34,10 +34,9 @@ public class BooksService {
     }
 
     public BookDetailsDTO findOne(int id) {
-        return booksRepository.findById(id).map(b -> {
-            Hibernate.initialize(b.getTags());
-            return bookMapper.bookToBookDetailsDTO(b);
-        }).orElseThrow(EntityNotFoundException::new);
+        return booksRepository.findByIdWithAuthorAndTags(id)
+                .map(bookMapper::bookToBookDetailsDTO)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional
@@ -46,8 +45,8 @@ public class BooksService {
     }
 
     @Transactional
-    public BookDetailsDTO update(int id, BookDTO updatedBook) {
-        Book book = bookMapper.bookDTOToBook(updatedBook);
+    public BookDetailsDTO update(int id, BookDetailsDTO updatedBook) {
+        Book book = bookMapper.bookDetailsDTOToBook(updatedBook);
         book.setId(id);
         return bookMapper.bookToBookDetailsDTO(booksRepository.save(book));
     }
@@ -56,5 +55,8 @@ public class BooksService {
     public void delete(int id) {
         booksRepository.deleteById(id);
     }
+
+//    @Transactional
+//    public BookDetailsDTO assignAuthor(int bookId, int )
 
 }

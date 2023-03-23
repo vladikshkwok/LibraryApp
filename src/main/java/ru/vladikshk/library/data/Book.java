@@ -14,7 +14,6 @@ import java.util.List;
 @Entity
 @Table(name = "book")
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Book {
 
     @Id()
@@ -25,7 +24,6 @@ public class Book {
     @Column(name = "name")
     @NotEmpty(message = "Name shouldn't be empty")
     @Size(min = 3, max = 100, message = "Name should be between 3 and 100 characters")
-    @NonNull
     private String name;
 
 
