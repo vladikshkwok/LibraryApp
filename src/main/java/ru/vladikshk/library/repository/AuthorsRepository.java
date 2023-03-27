@@ -14,4 +14,6 @@ public interface AuthorsRepository extends JpaRepository<Author, Integer> {
     @Query("select distinct a from Author a left join fetch a.books where a.id=:id")
     Optional<Author> findByIdWithBooks(@Param("id") int id);
 
+    Optional<Author> findByUsername(String username);
+
 }

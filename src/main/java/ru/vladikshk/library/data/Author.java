@@ -2,8 +2,6 @@ package ru.vladikshk.library.data;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -24,8 +22,14 @@ public class Author {
     @Column(name = "name")
     @NotEmpty(message = "Name shouldn't be empty")
     @Size(min = 3, max = 100, message = "Name should be between 3 and 100 characters")
-    String name;
+    private String name;
 
     @OneToMany(mappedBy = "author")
-    List<Book> books;
+    private List<Book> books;
+
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "password")
+    private String password;
 }

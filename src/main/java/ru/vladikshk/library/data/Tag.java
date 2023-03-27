@@ -2,8 +2,6 @@ package ru.vladikshk.library.data;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -24,7 +22,7 @@ public class Tag {
     @Column(name = "name")
     @NotEmpty(message = "Name shouldn't be empty")
     @Size(min = 3, max = 100, message = "Name should be between 3 and 100 characters")
-    String name;
+    private String name;
 
     @ManyToMany(mappedBy = "tags")
     private List<Book> books;
