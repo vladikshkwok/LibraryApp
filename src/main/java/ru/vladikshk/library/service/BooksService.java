@@ -56,6 +56,14 @@ public class BooksService {
         booksRepository.deleteById(id);
     }
 
+    public List<BookDTO> findByTag(String tag) {
+        return booksRepository.findAllWithTags().stream()
+                .filter(book -> book.getTags().stream()
+                        .anyMatch(t -> t.getName().equals(tag))
+                ).map(bookMapper::bookToBookDTO)
+                .collect(Collectors.toList());
+    }
+
 //    @Transactional
 //    public BookDetailsDTO assignAuthor(int bookId, int )
 

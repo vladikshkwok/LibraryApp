@@ -56,4 +56,10 @@ public class AuthorsService {
     public void delete(int id) {
         authorsRepository.deleteById(id);
     }
+
+    public List<AuthorDTO> findByTag(String tag) {
+        return authorsRepository.findAllByTag(tag).stream()
+                .map(authorMapper::authorToAuthorDTO)
+                .collect(Collectors.toList());
+    }
 }

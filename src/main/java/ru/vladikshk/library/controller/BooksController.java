@@ -38,9 +38,14 @@ public class BooksController {
         return booksService.findOne(id);
     }
 
+    @GetMapping("/search")
+    public List<BookDTO> getBooksByTag(@RequestParam(name = "tag") String tag) {
+        return booksService.findByTag(tag);
+    }
+
     @PostMapping()
     public ResponseEntity<BookDetailsDTO> createBook(@RequestBody @Valid BookDTO bookDTO,
-                                                   BindingResult bindingResult) {
+                                                     BindingResult bindingResult) {
         checkErrors(bindingResult);
         return ResponseEntity.ok(booksService.save(bookDTO));
     }

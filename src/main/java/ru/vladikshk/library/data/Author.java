@@ -2,6 +2,8 @@ package ru.vladikshk.library.data;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -24,7 +26,8 @@ public class Author {
     @Size(min = 3, max = 100, message = "Name should be between 3 and 100 characters")
     private String name;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+//    @Fetch(FetchMode.SUBSELECT)
     private List<Book> books;
 
     @Column(name = "username")

@@ -42,6 +42,11 @@ public class AuthorsController {
         return authorsService.findOne(id);
     }
 
+    @GetMapping("/search")
+    public List<AuthorDTO> getAuthorsByTag(@RequestParam("tag") String tag) {
+        return authorsService.findByTag(tag);
+    }
+
     @PostMapping()
     public ResponseEntity<AuthorDetailsDTO> createAuthor(@RequestBody @Valid AuthorDTO authorDTO,
                                                    BindingResult bindingResult) {

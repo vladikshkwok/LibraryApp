@@ -1,17 +1,23 @@
 package ru.vladikshk.library.service;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.vladikshk.library.data.Author;
+import ru.vladikshk.library.data.Book;
 import ru.vladikshk.library.data.Tag;
+import ru.vladikshk.library.data.TagSummary;
 import ru.vladikshk.library.dto.TagDTO;
 import ru.vladikshk.library.dto.TagDetailsDTO;
 import ru.vladikshk.library.mapper.TagMapper;
 import ru.vladikshk.library.repository.TagsRepository;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,5 +58,21 @@ public class TagsService {
     @Transactional
     public void delete(int id) {
         tagsRepository.deleteById(id);
+    }
+
+    public  List<TagSummary> getTagsSummary() {
+        return tagsRepository.findAllWithBooksAndAuthors()
+                .stream()
+                .map(tag -> new TagSummary(
+                        tag.getName(),
+                        tag.getBooks().size(),
+                        tag.getBooks()
+                                .stream()
+                                .map(Book::getAuthor)
+                                .map(Author::getId)
+                                .distinct()
+                                .count()
+                ))
+                .collect(Collectors.toList());
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import ru.vladikshk.library.data.TagSummary;
 import ru.vladikshk.library.dto.TagDTO;
 import ru.vladikshk.library.dto.TagDetailsDTO;
 import ru.vladikshk.library.mapper.TagMapper;
@@ -16,6 +17,7 @@ import ru.vladikshk.library.util.EntityNotModifiedException;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/tags")
@@ -38,6 +40,11 @@ public class TagsController {
     @GetMapping("/{id}")
     public TagDetailsDTO getTag(@PathVariable("id") int id) {
         return tagsService.findOne(id);
+    }
+
+    @GetMapping("/summary")
+    public List<TagSummary> getTagsSummary() {
+        return tagsService.getTagsSummary();
     }
 
     @PostMapping()
